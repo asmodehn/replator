@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+verify_ssl = true
+url = "https://pypi.org/simple"
+
+[dev-packages]
+
+[requires]
+python_version = "3.5"
+
+[packages]
+urwid = "*"
+pytest = "*"
+pycontracts = "*"
+click = "*"
+tatsu = "*"
+"0f6d5f5" = {path = "./../lark"}
