@@ -15,3 +15,4 @@ pycontracts = "*"
 click = "*"
 tatsu = "*"
 "0f6d5f5" = {path = "./../lark"}
+asyncio = "*"
