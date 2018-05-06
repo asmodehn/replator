@@ -1,14 +1,12 @@
 import pytest
 from lark import Lark
-
-from .. import parse
-
-calc_parser = Lark(parse.calc_grammar, parser='lalr')
+import os
+from ..parse import parse
 
 
 def test_calc_add():
 
-    assert calc_parser.parse("3 + 2", ).pretty() == """add
+    assert parse("3 + 2", ).pretty() == """add
   number\t3
   number\t2
 """
@@ -16,7 +14,7 @@ def test_calc_add():
 
 def test_calc_sub():
 
-    assert calc_parser.parse("3 - 2", ).pretty() == """sub
+    assert parse("3 - 2", ).pretty() == """sub
   number\t3
   number\t2
 """
@@ -24,7 +22,7 @@ def test_calc_sub():
 
 def test_calc_mul():
 
-    assert calc_parser.parse("3 * 2", ).pretty() == """mul
+    assert parse("3 * 2", ).pretty() == """mul
   number\t3
   number\t2
 """
@@ -32,7 +30,7 @@ def test_calc_mul():
 
 def test_calc_div():
 
-    assert calc_parser.parse("3 / 2", ).pretty() == """div
+    assert parse("3 / 2", ).pretty() == """div
   number\t3
   number\t2
 """
@@ -40,7 +38,7 @@ def test_calc_div():
 
 def test_calc_assign():
 
-    assert calc_parser.parse("b = 2", ).pretty() == """assign_var
+    assert parse("b = 2", ).pretty() == """assign_var
   b
   number\t2
 """
