@@ -1,10 +1,13 @@
 import os
-from lark import Lark, InlineTransformer
 
-# TODO : lark grammar importer
+import palimport
 
-with open(os.path.join(os.path.dirname(__file__), "calc.lark")) as f:
-    parse = Lark(f, parser='lalr').parse
+with palimport.LarkImporter():
+    print(__package__)
+    if __package__:
+        from . import calc
+    else:
+        import calc
 
 # to be able to test basic parsing functionality
 if __name__ == '__main__':
@@ -13,5 +16,5 @@ if __name__ == '__main__':
             s = input('> ')
         except EOFError:
             break
-        print(parse(s).pretty())
+        print(calc.parser.parse(s).pretty())
 
