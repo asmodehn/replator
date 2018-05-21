@@ -1,0 +1,22 @@
+
+?start: program
+
+?program: instr program
+        | "[" program "]"   -> loop
+        | comment program
+
+?instr: "+"                 -> incr
+     | "-"                  -> decr
+     | ">"                  -> ptri
+     | "<"                  -> ptrd
+     | ","                  -> inpt
+     | "."                  -> outp
+
+?comment: LETTER | DIGIT
+
+%import common.CNAME -> NAME
+%import common.LETTER
+%import common.DIGIT
+%import common.WS
+
+%ignore WS
