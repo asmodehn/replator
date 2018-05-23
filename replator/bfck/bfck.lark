@@ -1,9 +1,7 @@
 
-?start: program
+?start: (instr|comment|loop)*   -> start
 
-?program: instr program
-        | "[" program "]"   -> loop
-        | comment program
+?loop: "[" (instr|comment|loop)* "]"  -> loop
 
 ?instr: "+"                 -> incr
      | "-"                  -> decr
@@ -12,11 +10,10 @@
      | ","                  -> inpt
      | "."                  -> outp
 
-?comment: LETTER | DIGIT
+?comment: LETTER | DIGIT    -> ignore
 
-%import common.CNAME -> NAME
 %import common.LETTER
 %import common.DIGIT
-%import common.WS
+%import common.WS_INLINE
 
-%ignore WS
+%ignore WS_INLINE
