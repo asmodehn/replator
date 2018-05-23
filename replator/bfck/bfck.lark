@@ -1,7 +1,7 @@
 
-?start: (instr|comment|loop)*   -> start
+?start: (instr|loop)*   -> start
 
-?loop: "[" (instr|comment|loop)* "]"  -> loop
+?loop: "[" (instr|loop)* "]"  -> loop
 
 ?instr: "+"                 -> incr
      | "-"                  -> decr
@@ -10,10 +10,10 @@
      | ","                  -> inpt
      | "."                  -> outp
 
-?comment: LETTER | DIGIT    -> ignore
-
 %import common.LETTER
 %import common.DIGIT
 %import common.WS_INLINE
 
 %ignore WS_INLINE
+%ignore LETTER
+%ignore DIGIT

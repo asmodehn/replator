@@ -16,45 +16,32 @@ import io
 class BrainfuckPython(InlineTransformer):
 
     # TODO : AST https://docs.python.org/3/library/ast.html#module-ast
-    def __init__(self):
-        self.indent = ""
 
     def start(self, *args):
-        return """
-arr = bytearray(30000)
-ptr = 0
-{instr}
-""".format(instr="\n".join(args))
+        return """ptr = 0\n{instr}\n""".format(instr="\n".join(args))
 
     def incr(self):
-        return """
-{0}arr[ptr] += 1""".format(self.indent)
+        return """arr[ptr] += 1"""
 
     def decr(self):
-        return """
-{0}arr[ptr] -= 1""".format(self.indent)
+        return """arr[ptr] -= 1"""
 
     def ptri(self):
-        return """
-{0}ptr++""".format(self.indent)
+        return """ptr += 1"""
 
     def ptrd(self):
-        return """
-{0}ptr--""".format(self.indent)
+        return """ptr -= 1"""
 
-    def loop(self,*args):
-        self.indent += "  "
-        yield """
-{0}while (arr[ptr]):""".format(self.indent)
-        self.indent -= "  "
+    def loop(self, *args):
+        # managing indentation in a way compatible with the grammar and parser.
+        args = ["  "+sl for a in args for sl in a.splitlines()]
+        return """while (arr[ptr]):\n{instr}\n""".format(instr="\n".join(args))
 
     def outp(self):
-        return """
-{0}write(arr[ptr])""".format(self.indent)
+        return """write(arr[ptr:ptr+1])"""
 
     def inpt(self):
-        return """
-{0}arr[ptr]=read(1)""".format(self.indent)
+        return """arr[ptr]=read(1)"""
 
 
 class BfckLoader(palimport.Loader):
@@ -65,33 +52,60 @@ class BfckLoader(palimport.Loader):
     transformer = BrainfuckPython()
 
 
-def interp(s):
-    AST = bfck.parser.parse(s)
-    pysource = BrainfuckPython().transform(AST)
-    # TODO : fix that in the grammar
-    if not isinstance(pysource, (str,)):
-        pysource = str(pysource)
-    return pysource
+class BfckREPL(object):
+    """
+    class storing all information for this REPL
+    It is usable as a context manager.
+    """
 
+    def __init__(self, transformer, arr_size=30000):
+        self.transformer = transformer
+        self.arr_size = arr_size
+        self.arr = bytearray(self.arr_size)
+        self.outstream = io.BytesIO()
+        self.instream = io.BytesIO()
+        self.gbls = {'__builtins__': {'arr': self.arr},
+                'write': lambda b: self.outstream.write(b),
+                'read': self.instream.read}
 
-# to be able to test basic interpreting functionality
-if __name__ == '__main__':
-    outstream = io.BytesIO()
-    instream = io.BytesIO()
-    gbls = {'__builtins__': {'bytearray': bytearray}, 'write': lambda b: outstream.write(bytes(b)), 'read': instream.read}
-    lcls = {}
-    while True:
-        try:
+    def __enter__(self):
+        """entering REPL"""
+        self.indent = ""
+        self.ptr = 0
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+    def __call__(self,):
+        locals = {}
+        while True:
+            print(">>> " + str(self.outstream.getvalue()))
             s = input('bfck> ')
+            # Ref : http://lucumr.pocoo.org/2011/2/1/exec-in-python/
+            AST = bfck.parser.parse(s)
+            pysource = self.transformer.transform(AST)
+            # TODO : fix that in the grammar
+            if not isinstance(pysource, (str,)):
+                pysource = str(pysource)
+            print("<<< " + "\n<<< ".join(pysource.split("\n")))
+            pycode = compile(pysource, '<string>', 'exec')
+            # TODO : AST | dis: decompile
+            exec(pycode, self.gbls, locals)
+
+
+if __name__ == '__main__':
+    with BfckREPL(BrainfuckPython()) as repl:
+        try:
+            repl()
+        except KeyboardInterrupt:
+            raise
         except EOFError:
-            break
-        # Ref : http://lucumr.pocoo.org/2011/2/1/exec-in-python/
-        pysource = interp(s)
-        print(pysource)
-        pycode = compile(pysource, '<string>', 'exec')
-        # TODO : AST | dis: decompile
-        exec(pycode, gbls, lcls)
-        print(str(outstream.getvalue()))
+            raise
+
+        # auto cleanup and reload ? ( how about tower of interpreters ? )
+
+
 
 # cheatsheet
 
@@ -127,4 +141,6 @@ if __name__ == '__main__':
 
 
 
-# +++>+++++[-<+>].<
+# +++>+++++[-<+>].<.
+# [ [ + ] - ] .
+# [[+]-].
