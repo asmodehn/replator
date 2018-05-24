@@ -5,23 +5,16 @@
 ?start: relroot
 
 
-?relroot: dir
+?relroot: dir "/"
         | file
-      | NAME "=" sum    -> assign_var
 
-?sum: product
-    | sum "+" product   -> add
-    | sum "-" product   -> sub
+?dir: relroot
+    | file               -> file
 
-?product: atom
-    | product "*" atom  -> mul
-    | product "/" atom  -> div
+?file: ogdl             -> tree
 
-?atom: NUMBER           -> number
-     | "-" atom         -> neg
-     | NAME             -> var
-     | "(" sum ")"
 
+//%import ogdl.ogdl
 %import common.CNAME -> NAME
 %import common.NUMBER
 %import common.WS_INLINE
