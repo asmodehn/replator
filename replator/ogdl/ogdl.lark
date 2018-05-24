@@ -1,0 +1,39 @@
+// http://ogdl.org/spec
+// Tree
+
+[1]  char_text  ::= integer > 32
+[3]  char_space ::= 32 | 9
+[4]  char_break ::= 13 | 10
+[5]  char_end   ::= integer < 32 -( 9, 10, 13 )
+[6]  word     ::= ( char_text - '#' - ' \'' - '"')+ (char_word - ' \'' - '"')*
+[7]  string   ::= (char_text | char_space)+
+[8]  break    ::= 10 | 13 | (13 10)
+[9]  comment  ::= ^char_text '#' string? break
+[10] quoted   ::= '\''  string '\'' | '"' string '"'
+[11] space    ::= char_space+
+[12] space(n) ::= char_space*n ; where n is the equivalent number of spaces (can be 0)
+[13] block(n) ::= '\' (comment|break) (space(>n) string break)+
+[14] element  ::= (word | quoted)
+[15] list     ::= element (space? ','? space? element)*
+[16] line(n)  ::= space(n) list? space? ((element space? block)|(comment? break))
+[17] graph    ::= line* char_end
+
+// Graph
+
+arc ::= ":" ogdl_path space? break
+
+
+//Path
+
+[1] path ::= element ( '.' element )*
+[2] basic_element ::= token | quoted | index | selector
+[3] element = basic_element (index|selector)?
+
+[4] index ::= '[' number ']'
+[5] selector ::= '{' number? '}'
+
+[6] token := (unicode_letter | unicode_digit | '_')+
+[7] quoted := '\''  string '\'' | '"' string '"'
+[8] string := (unicode_letter | unicode_mark | unicode_number |
+               unicode_punctuation | unicode_symbol | unicode_separator_space )+
+[9] number := (unicode_digit)+
