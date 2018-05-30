@@ -3,7 +3,9 @@ The REPLator
 
 A prototyping area / training ground for your Esoteric Minimal Languages.
 
-Becuse strange beasts also need a home.
+Feel free to add your own and make a PR for it, so others can play around with it !
+
+Because strange beasts also need a home.
 
 
 ## Goal
@@ -12,7 +14,6 @@ Becuse strange beasts also need a home.
 3) Helping with transition to::
  
  - idris 
- - pypy
+ - rpython
  
 and make it as simple and faithful as possible.
- 
