@@ -1,4 +1,9 @@
-// Lambda Calculus based grammar
+//
+// Lambda Calculus grammar -> towards Scheme
+//
+// Representation of Boehm Tree
+// Inline transformer simplifying to normal form
+// Interpretation then requires some operational semantics...
 //
 
 // Start symbols for the grammar:
@@ -15,6 +20,7 @@ start: appl
 appl: "(" expr ")"                  -> apply
 
 //A very basic lambda representation
+//See https://stackoverflow.com/questions/33734170/why-doesnt-python-auto-escape-in-doc for backslash
 abst: (LAMBDA vars* ":" expr)       -> abst
 
 //A very basic lambda representation

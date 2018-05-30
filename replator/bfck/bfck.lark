@@ -1,0 +1,19 @@
+
+?start: (instr|loop)*   -> start
+
+?loop: "[" (instr|loop)* "]"  -> loop
+
+?instr: "+"                 -> incr
+     | "-"                  -> decr
+     | ">"                  -> ptri
+     | "<"                  -> ptrd
+     | ","                  -> inpt
+     | "."                  -> outp
+
+%import common.LETTER
+%import common.DIGIT
+%import common.WS_INLINE
+
+%ignore WS_INLINE
+%ignore LETTER
+%ignore DIGIT

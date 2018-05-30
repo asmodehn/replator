@@ -9,11 +9,9 @@ url = "https://pypi.org/simple"
 python_version = "3.5"
 
 [packages]
-urwid = "*"
 pytest = "*"
 pycontracts = "*"
 click = "*"
-tatsu = "*"
-"0f6d5f5" = {path = "./../lark"}
+palimport = "*"
 asyncio = "*"
 six = "*"
