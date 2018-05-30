@@ -25,6 +25,10 @@ class CalculatePython(InlineTransformer):
         # translate to python code instead of direct evaluation
         return "{name}".format(**locals())
 
+    def exit(self):
+        "calling exit method of the current repl"
+        return "exit()"
+
 
 class CalcLoader(palimport.Loader):
     """
@@ -49,6 +53,8 @@ if __name__ == '__main__':
     while True:
         try:
             s = input('calc> ')
+        except KeyboardInterrupt:
+            continue
         except EOFError:
             break
         # Ref : http://lucumr.pocoo.org/2011/2/1/exec-in-python/

@@ -3,7 +3,6 @@ import os
 import palimport
 
 with palimport.LarkImporter():
-    print(__package__)
     if __package__:
         from . import calc
     else:
