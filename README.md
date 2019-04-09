@@ -3,7 +3,9 @@ The REPLator
 
 A prototyping area / training ground for your Esoteric Minimal Languages.
 
-Becuse strange beasts also need a home.
+https://www.infoq.com/presentations/language-design-process
+
+Because strange beasts also need a home.
 
 
 ## Goal
